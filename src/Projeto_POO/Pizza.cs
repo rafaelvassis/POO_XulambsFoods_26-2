@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text;
+using System.Xml;
 
 
 namespace XulambsFoods {    
@@ -28,14 +30,25 @@ namespace XulambsFoods {
             _valorPorAdicional = 5d;
         }
 
-        public Pizza(int adicionais) {
-        
+
+        public void Init(int adicionais)
+        {
+            _descricao = "Pizza";
+            _maxIngredientes = 8;
+            _precoBase = 29d;
+            AdicionarIngredientes(adicionais);
+            _valorPorAdicional = 5d;
+        }
+
+        public Pizza(int adicionais) 
+        {
+            Init(adicionais);
         }
         #endregion
 
         #region métodos privados
         private double ValorAdicionais() {
-                
+            return _quantIngredientes * _valorPorAdicional;
         }
 
         private void ModificarDescricao() {
@@ -43,7 +56,8 @@ namespace XulambsFoods {
         }
 
         private bool PodeAdicionar(int quantos) {
-                
+            return (quantos >= 0 && 
+                quantos + _quantIngredientes <= _maxIngredientes);
         }
         #endregion
 
@@ -61,7 +75,15 @@ namespace XulambsFoods {
         }
 
         public string GerarCupom() {
-                
+            StringBuilder nota = new StringBuilder("\tXulambs Pizza!!!\n");
+            nota.AppendLine("----------------------------------");
+            nota.AppendLine($"{_descricao}:\n");
+            nota.AppendLine($"Preco inicial:\t{_precoBase:C2}");
+            nota.AppendLine($"Adicionais:\t{ValorAdicionais():C2}\n");
+            nota.AppendLine($"Total: {CalcularValorFinal():C2}");
+            nota.Append("----------------------------------");
+
+            return nota.ToString();
         }
         #endregion
 
